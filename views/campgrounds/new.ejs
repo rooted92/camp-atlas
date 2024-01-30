@@ -2,31 +2,46 @@
     <div class="row">
         <h1 class="text-center">New Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds" method="POST">
+            <form action="/campgrounds" method="POST" novalidate class="validated-form">
                 <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
-                    <input class="form-control" type="text" id="title" name="title">
+                    <input class="form-control" type="text" id="title" name="title" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="location">Location</label>
-                    <input class="form-control" type="text" id="location" name="location">
+                    <input class="form-control" type="text" id="location" name="location" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="image">Image URL</label>
-                    <input class="form-control" type="text" id="image" name="image">
+                    <input class="form-control" type="text" id="image" name="image" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="price">Campground Price</label>
                     <div class="input-group">
                         <span class="input-group-text" id="price-label">$</span>
                         <input type="text" class="form-control" id="price" name="price" placeholder="0.00"
-                            aria-label="Dollar amount (with dot and two decimal places)">
+                            aria-label="Dollar amount (with dot and two decimal places)" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" type="text" id="description" name="description"></textarea>
+                    <textarea class="form-control" type="text" id="description" name="description" required></textarea>
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-success">Add Campground</button>
