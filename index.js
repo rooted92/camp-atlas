@@ -34,7 +34,7 @@ const validateCampground = (req, res, next) => {
     } else {
         next();
     }
-}
+};
 
 app.get('/', (req, res) => {
     res.render('home.ejs')
@@ -52,7 +52,6 @@ app.get('/campgrounds/new', (req, res) => {
 
 app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
-
     const campground = new Campground(req.body);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
@@ -87,7 +86,7 @@ app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
 });
 
-// Here is our 
+// Here is our error handler. It will run if we pass an error to next() or if we throw an error. 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     // If we don't have a message, set it to 'Something went wrong'
