@@ -102,6 +102,14 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
     res.redirect(`/campgrounds/${campground._id}`);
 }));
 
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    // $pull is a MongoDB operator that removes from an existing array all instances of a value or values that match a specified condition.
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/campgrounds/${id}`);
+}))
+
 // .all is for all HTTP verbs (every request). Will only run if no other route matches (i.e. if we get a bad request)
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
