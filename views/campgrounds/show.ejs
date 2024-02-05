@@ -1,8 +1,8 @@
 <% layout('layouts/boilerplate') %>
 
-    <div class="row">
-        <div class="col-6 offset-3">
-            <div class="card mb-3" style="width: 18rem;">
+    <div class="row d-flex justify-content-center">
+        <div class="col-6">
+            <div class="card mb-3">
                 <img src="<%= campground.image %>" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">
@@ -28,11 +28,17 @@
                     2 days ago
                 </div>
             </div>
-            <form action="">
+            <h2>Leave a Review</h2>
+            <form class="mb-3" action="/campgrounds/<%= campground._id %>/reviews" method="POST">
+                <div class="mb-3">
+                    <label class="form-label" for="rating">Rating</label>
+                    <input type="range" min="1" max="5" class="form-range" name="review[rating]" id="rating" cols="30" rows="3" />
+                </div>
                 <div class="mb-3">
                     <label class="form-label" for="body">Review</label>
-                    <textarea class="form-control" name="campground[body]" id="body" cols="30" rows="3"></textarea>
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"></textarea>
                 </div>
+                <button class="btn btn-success">Submit</button>
             </form>
         </div>
     </div>
