@@ -36,6 +36,8 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
 
 router.put('/:id', validateSchema(campgroundSchema), catchAsync(async (req, res) => {
     const { id } = req.params;
+    console.log('Here is the ID: ', id);
+    console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body });
     res.redirect(`/campgrounds/${campground._id}`);
 }));

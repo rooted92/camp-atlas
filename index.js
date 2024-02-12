@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const ExpressError = require('./utilities/ExpressError');
+const cookieParser = require('cookie-parser');
 
 // Routes
 const campgroundRoutes = require('./routes/campgrounds.js');
@@ -26,9 +27,20 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(cookieParser('thisismysecret'));
 
 app.get('/', (req, res) => {
     res.render('home.ejs')
+});
+
+app.get('/getsignedcookie', (req, res) => {
+    res.cookie('isBigFoot', true, { signed: true });
+    res.send('Signed the cookie');
+});
+
+app.get('/verifycookie', (req, res) => {
+    console.log(req.signedCookies);
+    res.send(req.signedCookies);
 });
 
 // Campground routes
