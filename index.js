@@ -10,10 +10,7 @@ const cookieParser = require('cookie-parser');
 
 // Routes
 const campgroundRoutes = require('./routes/campgrounds.js');
-
-// Models
-const Campground = require('./models/campground');
-const Review = require('./models/review');
+const reviewRoutes = require('./routes/reviews.js');
 
 mongoose.connect('mongodb://127.0.0.1:27017/camp-atlas');
 const db = mongoose.connection;
@@ -45,6 +42,7 @@ app.get('/verifycookie', (req, res) => {
 
 // Campground routes
 app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 // .all is for all HTTP verbs (every request). Will only run if no other route matches (i.e. if we get a bad request)
 app.all('*', (req, res, next) => {

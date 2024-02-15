@@ -5,6 +5,7 @@ const { campgroundSchema, reviewSchema } = require('../schemas.js');
 const validateSchema = require('../utilities/validateSchema');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
+const ExpressError = require('../utilities/ExpressError');
 
 router.get('/', catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({});
@@ -46,24 +47,6 @@ router.delete('/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds');
-}));
-
-router.post('/:id/reviews', validateSchema(reviewSchema), catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-    const review = new Review(req.body.review);
-    campground.reviews.push(review);
-    await review.save();
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-
-router.delete('/:id/reviews/:reviewId', catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    // $pull is a MongoDB operator that removes from an existing array all instances of a value or values that match a specified condition.
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/campgrounds/${id}`);
 }));
 
 module.exports = router;
