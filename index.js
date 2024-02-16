@@ -8,6 +8,7 @@ const methodOverride = require('method-override');
 const ExpressError = require('./utilities/ExpressError');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const flash = require('connect-flash');
 
 // Routes
 const campgroundRoutes = require('./routes/campgrounds.js');
@@ -28,19 +29,41 @@ app.use(methodOverride('_method'));
 app.use(cookieParser('thisismysecret'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    }
+};
+
+app.use(session(sessionConfig));
+app.use(flash());
+
+// Setting up a middleware to handle all of our flash messages from every request.
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+
+
 app.get('/', (req, res) => {
     res.render('home.ejs')
 });
 
-app.get('/getsignedcookie', (req, res) => {
-    res.cookie('isBigFoot', true, { signed: true });
-    res.send('Signed the cookie');
-});
+// app.get('/getsignedcookie', (req, res) => {
+//     res.cookie('isBigFoot', true, { signed: true });
+//     res.send('Signed the cookie');
+// });
 
-app.get('/verifycookie', (req, res) => {
-    console.log(req.signedCookies);
-    res.send(req.signedCookies);
-});
+// app.get('/verifycookie', (req, res) => {
+//     console.log(req.signedCookies);
+//     res.send(req.signedCookies);
+// });
 
 // Campground routes
 app.use('/campgrounds', campgroundRoutes);
