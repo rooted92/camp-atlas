@@ -9,10 +9,14 @@ const ExpressError = require('./utilities/ExpressError');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user.js');
 
 // Routes
 const campgroundRoutes = require('./routes/campgrounds.js');
 const reviewRoutes = require('./routes/reviews.js');
+const userRoutes = require('./routes/users.js');
 
 mongoose.connect('mongodb://127.0.0.1:27017/camp-atlas');
 const db = mongoose.connection;
@@ -40,8 +44,19 @@ const sessionConfig = {
     }
 };
 
+// app.use session should be used before passport.session
 app.use(session(sessionConfig));
 app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+// We would like to sue the local strategy to authenticate users. We will use the User.authenticate method that comes from passportLocalMongoose. This method is added to the User model when we use passportLocalMongoose as a plugin in the User model.
+passport.use(new LocalStrategy(User.authenticate()));
+
+// This tells passport how to serialize a user. This means that passport will determine what data from the user object should be stored in the session. We are storing the user's id in the session. This is what passport.serializeUser does. It determines what data from the user object should be stored in the session. The result of the serializeUser method is attached to the session as req.session.passport.user = {}. This is what is stored in the session. We are storing the user's id in the session. When we need to retrieve the user from the session, passport will use the id that is stored in the session to retrieve the user object.
+// Basically how to store and unstore the user in the session.
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Setting up a middleware to handle all of our flash messages from every request.
 app.use((req, res, next) => {
@@ -49,6 +64,7 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     next();
 });
+
 
 
 app.get('/', (req, res) => {
@@ -65,9 +81,9 @@ app.get('/', (req, res) => {
 //     res.send(req.signedCookies);
 // });
 
-// Campground routes
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
+app.use('/', userRoutes);
 
 // .all is for all HTTP verbs (every request). Will only run if no other route matches (i.e. if we get a bad request)
 app.all('*', (req, res, next) => {
