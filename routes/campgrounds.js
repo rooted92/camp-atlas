@@ -7,18 +7,18 @@ const validateSchema = require('../utilities/validateSchema');
 const { isLoggedIn, isAuthor } = require('../middleware.js');
 const campgrounds = require('../controllers/campgrounds');
 
-router.get('/', catchAsync(campgrounds.index));
+// using .route to group routes with the same path
+router.route('/')
+    .get(catchAsync(campgrounds.index))
+    .post(isLoggedIn, validateSchema(campgroundSchema), catchAsync(campgrounds.createCampground));
 
 router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 
-router.post('/', isLoggedIn, validateSchema(campgroundSchema), catchAsync(campgrounds.createCampground));
-
-router.get('/:id', catchAsync(campgrounds.showCampground));
+router.route('/:id')
+    .get(catchAsync(campgrounds.showCampground))
+    .put(isLoggedIn, isAuthor, validateSchema(campgroundSchema), catchAsync(campgrounds.updateCampground))
+    .delete(isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground));
 
 router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(campgrounds.renderEditForm));
-
-router.put('/:id', isLoggedIn, validateSchema(campgroundSchema), catchAsync(campgrounds.updateCampground));
-
-router.delete('/:id', isLoggedIn, catchAsync(campgrounds.deleteCampground));
 
 module.exports = router;
