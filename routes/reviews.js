@@ -1,6 +1,7 @@
 const express = require('express');
 // We need to merge the params from the campgrounds route with the params from the reviews route. We do this by setting mergeParams to true.
 const router = express.Router({ mergeParams: true });
+const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware');
 
 const catchAsync = require('../utilities/catchAsync');
 const { reviewSchema } = require('../schemas.js');
@@ -9,7 +10,7 @@ const Campground = require('../models/campground');
 const Review = require('../models/review');
 const ExpressError = require('../utilities/ExpressError');
 
-router.post('/', validateSchema(reviewSchema), catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, validateSchema(reviewSchema), catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     const review = new Review(req.body.review);
