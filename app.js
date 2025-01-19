@@ -27,6 +27,7 @@ app.get('/', (require, response) => {
 app.get('/makecampground', async (require, response) => {
     const camp = new Campground({name: 'My Backyard', price: 'Free', description: 'A large backyard', location: 'My House'});
     await camp.save();
+    console.log(camp);
     response.render('makecampground.ejs');
 });
 
