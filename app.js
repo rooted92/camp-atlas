@@ -1,12 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const methodOverride = require('method-override');
 const Campground = require('./models/campground');
 
-mongoose.connect('mongodb://localhost:27017/camp-atlas', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+mongoose.connect('mongodb://localhost:27017/camp-atlas');
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
@@ -18,7 +16,8 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
 
 app.get('/', (require, response) => {
@@ -44,6 +43,19 @@ app.get('/campgrounds/:id', async (require, response) => {
     const { id } = require.params;
     const campground = await Campground.findById(id);
     response.render('campgrounds/show.ejs', { campground });
+});
+
+app.get('/campgrounds/:id/edit', async (require, response) => {
+    const { id } = require.params;
+    const campground = await Campground.findById(id);
+    response.render('campgrounds/edit.ejs', { campground });
+});
+
+app.put('/campgrounds/:id', async (require, response) => {
+    const { id } = require.params;
+    const campground = await Campground.findByIdAndUpdate
+        (id, { ...require.body.campground });
+    response.redirect(`/campgrounds/${campground._id}`);
 });
 
 app.listen(3000, () => {
