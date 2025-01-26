@@ -53,9 +53,16 @@ app.get('/campgrounds/:id/edit', async (require, response) => {
 
 app.put('/campgrounds/:id', async (require, response) => {
     const { id } = require.params;
+    // the spread operator is used to copy all properties from the body to the campground object
     const campground = await Campground.findByIdAndUpdate
         (id, { ...require.body.campground });
     response.redirect(`/campgrounds/${campground._id}`);
+});
+
+app.delete('/campgrounds/:id', async (require, response) => {
+    const { id } = require.params;
+    await Campground.findByIdAndDelete(id);
+    response.redirect('/campgrounds');
 });
 
 app.listen(3000, () => {
