@@ -29,6 +29,12 @@ app.get('/campgrounds', async (require, response) => {
     response.render('campgrounds/index.ejs', { campgrounds });
 });
 
+app.get('/campgrounds/:id', async (require, response) => {
+    const { id } = require.params;
+    const campground = await Campground.findById(id);
+    response.render('campgrounds/show.ejs', { campground });
+});
+
 app.listen(3000, () => {
     console.log('Listening on port: 3000');
 });
