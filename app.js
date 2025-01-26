@@ -24,11 +24,9 @@ app.get('/', (require, response) => {
    response.render('home.ejs');
 });
 
-app.get('/makecampground', async (require, response) => {
-    const camp = new Campground({name: 'My Backyard', price: 'Free', description: 'A large backyard', location: 'My House'});
-    await camp.save();
-    console.log(camp);
-    response.render('makecampground.ejs');
+app.get('/campgrounds', async (require, response) => {
+    const campgrounds = await Campground.find({});
+    response.render('campgrounds/index.ejs', { campgrounds });
 });
 
 app.listen(3000, () => {
