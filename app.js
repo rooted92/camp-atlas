@@ -18,15 +18,26 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.urlencoded({ extended: true }))
 
 
 app.get('/', (require, response) => {
-   response.render('home.ejs');
+    response.render('home.ejs');
 });
 
 app.get('/campgrounds', async (require, response) => {
     const campgrounds = await Campground.find({});
     response.render('campgrounds/index.ejs', { campgrounds });
+});
+
+app.get('/campgrounds/new', (require, response) => {
+    response.render('campgrounds/new.ejs');
+});
+
+app.post('/campgrounds', async (require, response) => {
+    const campground = new Campground(require.body.campground);
+    await campground.save();
+    response.redirect(`/campgrounds/${campground._id}`);
 });
 
 app.get('/campgrounds/:id', async (require, response) => {
