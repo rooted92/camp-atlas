@@ -14,6 +14,9 @@ importers:
       ejs:
         specifier: ^3.1.10
         version: 3.1.10
+      ejs-mate:
+        specifier: ^4.0.0
+        version: 4.0.0
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -161,6 +164,10 @@ packages:
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
+
+  ejs-mate@4.0.0:
+    resolution: {integrity: sha512-AYRN19jgrTHIuzbe2mQU5SEmTw6Ja/lVo+e9NKLLsCMdaKrk7D/SFr3QroiGnbDAi6moBezBSAdYQoyLbYzfuA==}
+    engines: {node: '>=10.0.0'}
 
   ejs@3.1.10:
     resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
@@ -610,6 +617,10 @@ snapshots:
       gopd: 1.2.0
 
   ee-first@1.1.1: {}
+
+  ejs-mate@4.0.0:
+    dependencies:
+      ejs: 3.1.10
 
   ejs@3.1.10:
     dependencies:
