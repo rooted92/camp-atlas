@@ -18,9 +18,14 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+
+app.use((request, response, next) => {
+    console.log(request.method.toUpperCase());
+    next();
+});
 
 app.get('/', (require, response) => {
     response.render('home.ejs');
