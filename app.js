@@ -27,6 +27,11 @@ app.use((request, response, next) => {
     next();
 });
 
+app.use('/dogs', (request, response, next) => {
+    console.log('I love dogs');
+    next();
+});
+
 app.get('/', (require, response) => {
     response.render('home.ejs');
 });
@@ -70,6 +75,10 @@ app.delete('/campgrounds/:id', async (require, response) => {
     const { id } = require.params;
     await Campground.findByIdAndDelete(id);
     response.redirect('/campgrounds');
+});
+
+app.use((request, response) => {
+    response.status(404).send('Page not found');
 });
 
 app.listen(3000, () => {
